@@ -2,10 +2,10 @@ var Mysql = require('node-mysql-helper');
 var Q = require('q');
 
 var mysqlOptions = {
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'db_wallet',
+  host: 'sql3.freemysqlhosting.net',
+  user: 'sql3207653',
+  password: 'mcNGe5FCHz',
+  database: 'sql3207653',
   socketPath: false,
   connectionLimit: 5
 };
