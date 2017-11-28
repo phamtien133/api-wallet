@@ -3,7 +3,7 @@ var apiRegister = require('../modules/core-api/api-register');
 var apiLogin = require('../modules/core-api/api-login');
 var coreApiRoute = express.Router();
 
-coreApiRoute.get('/regitser', function(req, res) {
+coreApiRoute.get('/register', function(req, res) {
   let data = {
     'status': '0',
     'error': "Method get isn't accept",
@@ -11,7 +11,7 @@ coreApiRoute.get('/regitser', function(req, res) {
   };
   res.send(data);
 });
-coreApiRoute.post('/regitser', function(req, res) {
+coreApiRoute.post('/register', function(req, res) {
   apiRegister.register('POST', req, res);
 });
 
