@@ -23,44 +23,65 @@ function _post(req, res) {
   let password = params['password'] || '';
   var ePassword = crypto.createHash('md5').update(password).digest('hex');
   dbHelper.dbLoadSql(
-    `INSERT INTO tb_user_info (
-    username, 
-    password)
-    VALUES (?, ?)`,
+    `SELECT COUNT(id) AS total 
+    FROM tb_user_info ui
+    WHERE ui.username = ?`,
     [
-      username,
-      ePassword
+      username
     ]
   ).then(
-    function (userInfo) {
-      if (userInfo.insertId > 0) {
+    function (Total) {
+      if (Total[0]['total']) {
+        let data = {
+          'status': '-1',
+          'data': {
+            'report': 'Đã tồn tại user này'
+          }
+        };
+        res.send(data);
+      } else {
         dbHelper.dbLoadSql(
-          `INSERT INTO tb_wallet (
-          user_id)
-          VALUES (?)`,
+          `INSERT INTO tb_user_info (
+          username, 
+          password)
+          VALUES (?, ?)`,
           [
-            userInfo.insertId
+            username,
+            ePassword
           ]
-        ).then(function (wallet) {
-          if (wallet.insertId > 0) {
-            let data = {
-              'status': '1',
-              'data': []
-            };
-            res.send(data);
+        ).then(
+          function (userInfo) {
+            if (userInfo.insertId > 0) {
+              dbHelper.dbLoadSql(
+                `INSERT INTO tb_wallet (
+                user_id)
+                VALUES (?)`,
+                [
+                  userInfo.insertId
+                ]
+              ).then(function (wallet) {
+                if (wallet.insertId > 0) {
+                  let data = {
+                    'status': '1',
+                    'data': []
+                  };
+                  res.send(data);
+                }
+                else {
+                  let data = {
+                    'status': '0',
+                    'data': []
+                  };
+                  res.send(data);
+                }
+              });
+            }
           }
-          else {
-            let data = {
-              'status': '0',
-              'data': []
-            };
-            res.send(data);
+        ).catch(function (error) {
+            res.send(error);
           }
-        });
+        );
       }
-    }
-  ).catch(function (error) {
-      res.send(error);
     }
   );
 }
