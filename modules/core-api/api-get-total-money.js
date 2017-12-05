@@ -23,7 +23,7 @@ function _post(req, res) {
   dbHelper.dbLoadSql(
     `SELECT total_money 
     FROM tb_wallet w
-    JOIN tb_user u ON u.id = w.user_id
+    INNER JOIN tb_user_info u ON u.id = w.user_id
     WHERE u.username = ?`,
     [
       username
