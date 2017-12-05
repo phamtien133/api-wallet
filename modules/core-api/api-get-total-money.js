@@ -19,13 +19,14 @@ function _get(req, res) {
 
 function _post(req, res) {
   let params = req.body || {};
-  let user_id = params['user_id'] || 0;
+  let username = params['username'] || '';
   dbHelper.dbLoadSql(
     `SELECT total_money 
     FROM tb_wallet w
-    WHERE w.user_id = ?`,
+    JOIN tb_user u ON u.id = w.user_id
+    WHERE u.username = ?`,
     [
-      user_id
+      username
     ]
   ).then(
     function (userInfo) {
